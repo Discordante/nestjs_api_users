@@ -6,6 +6,7 @@ import { exceptionFilterProviders } from './config/errors/filters/exception.filt
 import { LoggerConfigService } from './config/logger/logger.config';
 import { RequestContextMiddleware, RequestContextModule, RequestLoggerInterceptor, RequestLoggerModule } from './config/logger/logging';
 import { TypeOrmConfigService } from './config/typeorm/conn1/typeorm.config.service';
+import { UsersModule } from './users/users.module';
 
 
 @Module({
@@ -19,6 +20,7 @@ import { TypeOrmConfigService } from './config/typeorm/conn1/typeorm.config.serv
       useClass: LoggerConfigService,
     }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
+    UsersModule,
 
   ],
   providers: [

@@ -3,7 +3,8 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { ConfigService } from '@nestjs/config';
 import entities from './entities.config';
-import { parseLoggingOptions } from './helpers/typeorm.config.helper';
+import { parseLoggingOptions } from '../helpers/typeorm.config.helper';
+
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
