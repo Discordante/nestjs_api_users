@@ -21,7 +21,6 @@ import { UsersModule } from './users/users.module';
     }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     UsersModule,
-
   ],
   providers: [
     {
