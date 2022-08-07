@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreatedUserDto } from './dto/added-user.dto';
 import { CreateUserDto } from './dto/user.dto';
@@ -16,7 +24,14 @@ export class UsersController {
   }
 
   @Post()
-  async createUser( @Body() createUserDto: CreateUserDto): Promise<CreatedUserDto> {
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<CreatedUserDto> {
     return this.userService.createUser(createUserDto);
+  }
+
+  @Delete('/:id')
+  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.userService.deleteUser(id);
   }
 }

@@ -3,6 +3,7 @@ import {
   HttpStatus,
   Injectable,
   LoggerService,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Logger } from 'src/config/logger/logging';
@@ -41,5 +42,14 @@ export class UserService {
     const newUser = this.usersRepository.create(createUserDto);
     const result = await this.usersRepository.save(newUser);
     return this.userMapper.toCreatedUserDto(result);
+  }
+
+  async deleteUser(id: number): Promise<void> {
+    const existingUser = await this.usersRepository.findOneBy({ id });
+    if (!existingUser) {
+      throw new NotFoundException();
+    }
+    this.logger.log('Deleting user');
+    const deletedUser = await this.usersRepository.softDelete(id);
   }
 }

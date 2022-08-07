@@ -3,13 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'Users' })
 export class Users {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -21,7 +21,7 @@ export class Users {
   @Column()
   last_name: string;
 
-  @Column()
+  @Column({ type: 'date' })
   birthday: Date;
 
   @Column()
