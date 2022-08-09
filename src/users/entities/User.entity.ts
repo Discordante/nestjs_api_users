@@ -21,8 +21,8 @@ export class Users {
   @Column()
   last_name: string;
 
-  @Column({ type: 'date' })
-  birthday: Date;
+  @Column()
+  birth_date: Date;
 
   @Column()
   password: string;
@@ -31,8 +31,8 @@ export class Users {
   createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt?: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedAt?: Date;
+  deletedAt: Date;
 }

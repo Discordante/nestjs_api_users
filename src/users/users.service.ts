@@ -12,7 +12,7 @@ import { CreatedUserDto } from './dto/added-user.dto';
 
 import { CreateUserDto } from './dto/user.dto';
 import { Users } from './entities/User.entity';
-import { UserMapper } from './mapper/user.mapper';
+import { UserMapper } from './mappers/user.mapper';
 
 @Injectable()
 export class UserService {
