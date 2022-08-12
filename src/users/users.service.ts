@@ -15,7 +15,7 @@ import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { UsersDto } from './dto/users.dto';
 import { Users } from './entities/User.entity';
-import { UserMapper } from './mappers/user.mapper';
+
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -24,7 +24,6 @@ export class UserService {
     @Logger(UserService.name) private readonly logger: LoggerService,
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
-    private readonly userMapper: UserMapper,
   ) {}
 
   async findOne(id: number): Promise<Users | null> {
