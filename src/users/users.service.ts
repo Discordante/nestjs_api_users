@@ -69,7 +69,7 @@ export class UserService {
         HttpStatus.CONFLICT,
       );
     }
-
+    
     const newUser = this.usersRepository.create(createUserDto);
     const result = await this.usersRepository.save(newUser);
     return this.userMapper.toCreatedUserDto(result);
@@ -89,7 +89,6 @@ export class UserService {
     if (!existingUser) {
       throw new NotFoundException();
     }
-    this.logger.log('Deleting user');
     const deletedUser = await this.usersRepository.softDelete(id);
   }
 }

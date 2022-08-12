@@ -1,4 +1,6 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -6,6 +8,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import * as bcrypt from 'bcrypt';
+import { UserRoles } from '../constants/roles.constants';
 
 @Entity({ name: 'Users' })
 export class Users {
@@ -25,6 +30,9 @@ export class Users {
   birth_date: Date;
 
   @Column()
+  role: UserRoles;
+
+  @Column()
   password: string;
 
   @CreateDateColumn()
@@ -35,4 +43,12 @@ export class Users {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @BeforeInsert()
+  async setPassword(password: string) {
+    const salt = await bcrypt.genSalt();
+    console.log(salt);
+
+    this.password = await bcrypt.hash(password || this.password, salt);
+  }
 }
