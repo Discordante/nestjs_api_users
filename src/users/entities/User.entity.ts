@@ -47,8 +47,6 @@ export class Users {
   @BeforeInsert()
   async setPassword(password: string) {
     const salt = await bcrypt.genSalt();
-    console.log(salt);
-
     this.password = await bcrypt.hash(password || this.password, salt);
   }
 }

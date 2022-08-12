@@ -10,12 +10,13 @@ import { PageDto } from 'src/common/dto/page.dto';
 import { PageMetaDto } from 'src/common/dto/pageMeta.dto';
 import { PageOptionsDto } from 'src/common/dto/pageOptions.dto';
 import { Logger } from 'src/config/logger/logging';
-import { Repository, UpdateResult } from 'typeorm';
-import { CreatedUserDto } from './dto/added-user.dto';
+import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
+import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { UsersDto } from './dto/users.dto';
 import { Users } from './entities/User.entity';
 import { UserMapper } from './mappers/user.mapper';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -27,7 +28,11 @@ export class UserService {
   ) {}
 
   async findOne(id: number): Promise<Users | null> {
-    return this.usersRepository.findOneBy({ id });
+    const existingUser = await this.usersRepository.findOneBy({ id });
+    if (!existingUser) {
+      throw new NotFoundException();
+    }
+    return existingUser;
   }
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<UsersDto>> {
@@ -46,7 +51,7 @@ export class UserService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<CreatedUserDto> {
+  async createUser(createUserDto: CreateUserDto): Promise<InsertResult> {
     const existingUserbyEmail = await this.usersRepository.findOneBy({
       email: createUserDto.email,
     });
@@ -69,26 +74,57 @@ export class UserService {
         HttpStatus.CONFLICT,
       );
     }
-    
+
     const newUser = this.usersRepository.create(createUserDto);
-    const result = await this.usersRepository.save(newUser);
-    return this.userMapper.toCreatedUserDto(result);
+    return this.usersRepository.insert(newUser);
   }
 
   async updateUser(
     id: number,
     updateUserDto: UpdateUserDto,
   ): Promise<UpdateResult> {
-    await this.findOne(id);
-    const update = this.usersRepository.update(id, updateUserDto);
-    return update;
-  }
-
-  async deleteUser(id: number): Promise<void> {
     const existingUser = await this.usersRepository.findOneBy({ id });
     if (!existingUser) {
       throw new NotFoundException();
     }
-    const deletedUser = await this.usersRepository.softDelete(id);
+    return this.usersRepository.update(id, updateUserDto);
+  }
+
+  async updatePassword(
+    id: number,
+    updatePasswordDto: UpdatePasswordDto,
+  ): Promise<UpdateResult> {
+    const { oldPassword, newPassword } = updatePasswordDto;
+    const existingUser = await this.usersRepository.findOne({
+      where: {
+        id,
+      },
+      select: ['password'],
+    });
+
+    if (!existingUser) {
+      throw new NotFoundException();
+    }
+
+    if (await bcrypt.compare(oldPassword, existingUser.password)) {
+      const salt = await bcrypt.genSalt();
+      const update = this.usersRepository.update(id, {
+        password: await bcrypt.hash(newPassword, salt),
+      });
+      return update;
+    } else {
+      throw new HttpException(
+        { errors: 'Password is not correct.' },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+  }
+
+  async deleteUser(id: number): Promise<DeleteResult> {
+    const existingUser = await this.usersRepository.findOneBy({ id });
+    if (!existingUser) {
+      throw new NotFoundException();
+    }
+    return this.usersRepository.softDelete(id);
   }
 }

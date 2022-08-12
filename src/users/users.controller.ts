@@ -14,8 +14,8 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PageDto } from 'src/common/dto/page.dto';
 import { PageOptionsDto } from 'src/common/dto/pageOptions.dto';
-import { UpdateResult } from 'typeorm';
-import { CreatedUserDto } from './dto/added-user.dto';
+import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
+import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { UsersDto } from './dto/users.dto';
 import { Users } from './entities/User.entity';
@@ -27,9 +27,7 @@ export class UsersController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/:id')
-  async findOneById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Users | null> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Users | null> {
     return this.userService.findOne(id);
   }
 
@@ -47,7 +45,7 @@ export class UsersController {
   @Post()
   async createUser(
     @Body() createUserDto: CreateUserDto,
-  ): Promise<CreatedUserDto> {
+  ): Promise<InsertResult> {
     return this.userService.createUser(createUserDto);
   }
 
@@ -59,8 +57,18 @@ export class UsersController {
     return this.userService.updateUser(id, updateUserDto);
   }
 
+  @Patch('/:id/password')
+  async updatePassword(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ): Promise<UpdateResult> {
+    return this.userService.updatePassword(id, updatePasswordDto);
+  }
+
   @Delete('/:id')
-  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async deleteUser(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<DeleteResult> {
     return this.userService.deleteUser(id);
   }
 }
