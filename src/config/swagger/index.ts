@@ -1,7 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-
 const defaultDocsPath = '/docs';
 
 export interface SwaggerOptions {
@@ -17,7 +16,7 @@ export const setupSwagger = (
   const config = new DocumentBuilder()
     .setTitle('Base nest project')
     .setDescription('Incredibly detailed description of how the api works')
-    .setVersion('0.0.1')
+    .setVersion('0.0.1');
 
   options?.servers?.forEach((s) => config.addServer(s));
 

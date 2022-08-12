@@ -4,10 +4,15 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { exceptionFilterProviders } from './config/errors/filters/exception.filter.providers';
 import { LoggerConfigService } from './config/logger/logger.config';
-import { RequestContextMiddleware, RequestContextModule, RequestLoggerInterceptor, RequestLoggerModule } from './config/logger/logging';
+import {
+  RequestContextMiddleware,
+  RequestContextModule,
+  RequestLoggerInterceptor,
+  RequestLoggerModule,
+} from './config/logger/logging';
 import { TypeOrmConfigService } from './config/typeorm/conn1/typeorm.config.service';
+import HealthModule from './health/health.module';
 import { UsersModule } from './users/users.module';
-
 
 @Module({
   imports: [
@@ -21,6 +26,7 @@ import { UsersModule } from './users/users.module';
     }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     UsersModule,
+    HealthModule,
   ],
   providers: [
     {

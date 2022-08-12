@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config';
 import entities from './entities.config';
 import { parseLoggingOptions } from '../helpers/typeorm.config.helper';
 
-
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
