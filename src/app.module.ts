@@ -11,6 +11,7 @@ import {
   RequestLoggerModule,
 } from './config/logger/logging';
 import { TypeOrmConfigService } from './config/typeorm/conn1/typeorm.config.service';
+import HealthModule from './health/health.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -25,6 +26,7 @@ import { UsersModule } from './users/users.module';
     }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     UsersModule,
+    HealthModule,
   ],
   providers: [
     {
