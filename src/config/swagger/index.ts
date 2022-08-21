@@ -27,7 +27,12 @@ export const setupSwagger = (
     docsPath = '/' + docsPath;
   }
 
-  config.build();
+
   const document = SwaggerModule.createDocument(app, config.build());
-  SwaggerModule.setup(`${urlPrefix}${docsPath}`, app, document);
+  SwaggerModule.setup(`${urlPrefix}${docsPath}`, app, document, {
+    swaggerOptions: {
+      tagsSorter: 'alpha',
+      operationsSorter: 'method',
+    },
+  });
 };
